@@ -207,9 +207,11 @@ mainDf = mainDf[mainDf['Cond8'] == True]
 # %%
 # Create DF of oversold stocks
 overSold = relativeStrength[relativeStrength['RSI'] <= 30]
+overSoldList = overSold.index.to_list()
 
 # %%
 overBought = mainDf[mainDf['RSI'] >= 70]
+overBoughtList = overBought.index.to_list()
 # %%
 SPList = mainDf[[ 'Last_Price']]
 # %%
@@ -227,10 +229,6 @@ for name in mainList:
     if name not in copyList:
         newToList.append(name)
 
-# %%
-newDict = {'Name': newToList}
-newToListDf = pd.DataFrame(newDict)
-newToListDf.to_csv('newToList.csv')
 
 # %%
 notOnListAnymore = []
@@ -238,7 +236,10 @@ for name in copyList:
     if name not in mainList:
         notOnListAnymore.append(name)
 
-noLongerDf = pd.DataFrame({'Name': notOnListAnymore})
-noLongerDf.to_csv('noLongerOnList.csv')
+# %%
+outputDict = {'Overbought': {'Name': overBoughtList}, 'Oversold': {'Name': overSoldList}, 'New To List': {'Name': newToList}, 'No Longer on List': {'Name': notOnListAnymore}}
 # %%
 SPList.to_csv('SPList copy.csv')
+
+# %%
+outputDict['Overbought']
