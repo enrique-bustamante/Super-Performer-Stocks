@@ -215,3 +215,30 @@ SPList = mainDf[[ 'Last_Price']]
 # %%
 SPList.to_csv('SPList.csv')
 # %%
+copyDf = pd.read_csv('SPList copy.csv')
+# %%
+copyList = []
+# %%
+newToList = []
+mainList = mainDf.index.to_list()
+
+# %%
+for name in mainList:
+    if name not in copyList:
+        newToList.append(name)
+
+# %%
+newDict = {'Name': newToList}
+newToListDf = pd.DataFrame(newDict)
+newToListDf.to_csv('newToList.csv')
+
+# %%
+notOnListAnymore = []
+for name in copyList:
+    if name not in mainList:
+        notOnListAnymore.append(name)
+
+noLongerDf = pd.DataFrame({'Name': notOnListAnymore})
+noLongerDf.to_csv('noLongerOnList.csv')
+# %%
+SPList.to_csv('SPList copy.csv')
