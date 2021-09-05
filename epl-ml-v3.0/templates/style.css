@@ -1,0 +1,29 @@
+body, h2, h3, h4, h5, h6 {
+    font-family: "Lato", sans-serif;
+}
+
+.w3-bar, h1, button {
+    font-family: "Montserrat", sans-serif;
+}
+
+.fa-anchor, .fa-coffee {
+    font-size: 200px;
+}
+
+#header {
+    background-image:  linear-gradient(purple, blueviolet);
+}
+
+#first {
+    color: black;
+}
+
+#first::before {
+    background-image: url("../Images/mendy.jpg");
+    opacity:  0.3;
+}
+
+p {
+    position:  relative;
+    color:  black;
+}
