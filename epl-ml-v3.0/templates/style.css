@@ -15,10 +15,6 @@ body, h2, h3, h4, h5, h6 {
 }
 
 #first {
-    color: black;
-}
-
-#first::before {
     background-image: url("../Images/mendy.jpg");
     opacity:  0.3;
 }
@@ -26,4 +22,8 @@ body, h2, h3, h4, h5, h6 {
 p {
     position:  relative;
     color:  black;
+}
+
+.w3-button {
+    background-color: w3-light-grey;
 }
