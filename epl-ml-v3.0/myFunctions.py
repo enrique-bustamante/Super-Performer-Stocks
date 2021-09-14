@@ -6,10 +6,13 @@ def zScore(df):
     dfProjSTD = df['projection'].std()
     dfFormMean = df['form'].mean()
     dfFormSTD = df['form'].std()
+    dfPointsMean = df['total_points'].mean()
+    dfPointsSTD = df['total_points'].mean()
     zScoreValue = (df.loc[:,'value'] - dfValueMean)/dfValueSTD
     zScoreProjection = (df.loc[:,'projection'] - dfProjMean)/dfProjSTD
     zScoreForm = (df.loc[:,'form'] - dfFormMean)/dfFormSTD
-    df['Z Score'] = 2*zScoreValue + 2*zScoreProjection + zScoreForm
+    zScorePoints = (df.loc[:,'total_points'] - dfFormMean)/dfFormSTD
+    df['Z Score'] = 2*zScoreValue + 2*zScoreProjection + zScoreForm + 2*zScorePoints
     return df
 
 def columnsAsType(df, listOfColumns, type):

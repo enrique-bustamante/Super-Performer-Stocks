@@ -8,6 +8,8 @@ import numpy as np
 # Import visualization libraries
 from IPython.display import HTML
 import matplotlib.pyplot as plt
+import seaborn as sns
+import dataframe_image as dfi
 
 # Import preprocessing libraries
 from sklearn.preprocessing import StandardScaler
@@ -25,8 +27,7 @@ import requests
 from bs4 import BeautifulSoup as soup
 
 # Import functions
-from functions import zScore, columnsAsType, positionDf, rankDf
-
+from myFunctions import *
 # %%
 # Set up the connection to the API for download
 url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
@@ -79,7 +80,7 @@ del gameweek
 
 # %%
 # Separate the dataframe into categorical and numerical values
-categoricalDf = elementsDf[['web_name', 'team', 'position', 'form', 'value', 'now_cost']].set_index(['web_name'])
+categoricalDf = elementsDf[['web_name', 'team', 'position','value', 'form', 'now_cost', 'total_points']].set_index(['web_name'])
 numericalDf = elementsDf.drop(columns=['team', 'position', 'form', 'now_cost']).set_index(['web_name'])
 
 # %%
@@ -116,6 +117,22 @@ categoricalDf['predicted_value'] = rfModel.predict(scaler.transform(numericalAtt
 categoricalDf['projection'] = categoricalDf['predicted_value'] * categoricalDf['now_cost']
 
 # %%
+# Clean up workspace
+del numericalAttributes
+del numericalFeatures
+del numericTestAttributes
+del numericTestFeatures
+del numericTrainAttributes
+del numericTrainFeatures
+del parameters
+del rfModel
+del scaler
+del search
+del testScaled
+del trainScaled
+del yPred
+
+# %%
 # Calculate all positions z-score
 categoricalDfZ = zScore(categoricalDf)
 categoricalDf['All position Z score'] = categoricalDfZ['Z Score']
@@ -150,7 +167,7 @@ forwardDf = rankDf(forwardDf, 'Total rank', 'Final Z Score')
 
 # %%
 # Filter dfs to the essential columns
-columnsList = ['team', 'position', 'value', 'projection', 'now_cost', 'Total rank', 'form']
+columnsList = ['team', 'position', 'value', 'projection', 'now_cost', 'Total rank', 'form', 'total_points']
 defenderDf = defenderDf[columnsList]
 goalieDf = goalieDf[columnsList]
 middieDf = middieDf[columnsList]
@@ -164,8 +181,44 @@ HTML(middieDf.head(20).to_html('templates/midfielders.html', classes='table tabl
 HTML(forwardDf.head(20).to_html('templates/forwards.html', classes='table table-striped'))
 
 # %%
+dfi.export(defenderDf.head(20),'images/defenders.png')
+dfi.export(goalieDf.head(20),'images/goalies.png')
+dfi.export(middieDf.head(20),'images/midfielders.png')
+dfi.export(forwardDf.head(20),'images/forwards.png')
+
+
+# %%
 # save dataframes to csvs
 defenderDf.to_csv('rankings/DefenderRank.csv',index=True)
 goalieDf.to_csv('rankings/GoalieRank.csv', index=True)
 middieDf.to_csv('rankings/MidfielderRank.csv', index=True)
 forwardDf.to_csv('rankings/ForwardRank.csv',index=True)
+
+# %%
+# Visualization
+sns.relplot(data=elementsDf, x='now_cost', y='points_per_game', col='position', hue='bonus', col_wrap=2)
+plt.savefig('images/costVsPPG.png')
+
+
+# %%
+sns.displot(elementsDf,x='points_per_game', hue='position', kind='kde', fill=True)
+plt.savefig('images/ppg.png')
+
+# %%
+sns.boxplot(data=elementsDf, y='points_per_game', x='position')
+plt.savefig('images/ppgBox.png')
+# %%
+sns.displot(elementsDf, x='ict_index', hue='position', kind='kde', fill=True)
+plt.savefig('images/ictIndex.png')
+
+# %%
+sns.displot(elementsDf, x='bonus', hue='position', kind='kde', fill=True)
+plt.savefig('images/bonus.png')
+
+# %%
+sns.displot(elementsDf, x='form', hue='position', kind='kde', fill=True)
+plt.savefig('images/form.png')
+
+# %%
+sns.displot(elementsDf, x='total_points', hue='position', kind='kde', fill=True)
+plt.savefig('images/points.png')
