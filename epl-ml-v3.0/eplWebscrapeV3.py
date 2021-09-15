@@ -3,7 +3,7 @@
 
 # Import basic libraries
 import pandas as pd
-import numpy as np
+import numpy as np # might not be used after all
 
 # Import visualization libraries
 from IPython.display import HTML
